@@ -85,7 +85,7 @@ The most recent 5-year microdata available from the American Community Survey co
 Figure S1. Percent of tests with PUMA-level residential geolocation available, out of all tests in a county.
 
 ```{r heatmap_tests, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-load("~/Downloads/test_heat_map_appendix2020-11-30 (1).RData")
+load("./test_heat_map_appendix2020-11-30 (1).RData")
 print(test_heat_map)
 ```
 
@@ -94,7 +94,7 @@ print(test_heat_map)
 Figure S2. Percent of cases with PUMA-level residential geolocation available, out of all cases in a county.
 
 ```{r heatmap_cases, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-load("~/Downloads/case_heat_map_appendix2020-11-30 (1).RData")
+load("./case_heat_map_appendix2020-11-30 (1).RData")
 print(case_heat_map)
 ```
 
@@ -103,8 +103,8 @@ print(case_heat_map)
 Figure S3. Sensitivity analysis for manuscript figure 2 distributing cases and tests with missing data based on population size.
 
 ```{r unknown_sens_analyses, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_population_sensitivity.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_population_sensitivity.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 cases <- cases[race_grp=="ALL"]
@@ -149,8 +149,8 @@ print(plot)
 Figure S4. Sensitivity analysis for manuscript figure 3 distributing cases and tests with missing data based on population size.
 
 ```{r unknown_sens_analyses_blues, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_population_sensitivity.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_population_sensitivity.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 cases <- cases[race_grp!="ALL"]
@@ -228,7 +228,7 @@ Figure S5. Sensitivity analysis for manuscript figure 4 distributing cases and t
 
 
 ```{r unknown_sens_analyses2, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- fread("./puma_mapping_2010.csv")
 puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
 
 data(fips_codes)
@@ -245,7 +245,7 @@ puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, 
 puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
 
 # Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
-puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- fread("./puma_name_list.csv")
 puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
 puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
 puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
@@ -264,8 +264,8 @@ for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White"
 puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
 puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
 
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_population_sensitivity.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_population_sensitivity.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 cases <- cases[race_grp!="ALL"]
@@ -286,7 +286,7 @@ cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June"
 cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
 
 county_df <- merge(cases, puma_mapping_out, by = c("PUMA", "race_grp"), allow.cartesian = T)
-regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+regions <- fread("./county_to_region_appendix.csv")
 county_df <- merge(county_df, regions, by = "county")
 county_df <- unique(county_df[,.(PUMA, race_grp, tot_persons_point, tpr_topcoded, month, test_rate_topcoded,
                                  topcode_indic, region_map, crowd_essential_topcoded, row_id)])
@@ -348,7 +348,7 @@ print(plot)
 Figure S6. Sensitivity analysis for manuscript figure 2 using only data with complete geolocation information.
 
 ```{r known_sens_analyses, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/puma_level_data.csv")
+cases <- fread("./puma_level_data.csv")
 cases <- cases[race_grp=="ALL"]
 
 cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
@@ -391,7 +391,7 @@ print(plot)
 Figure S7. Sensitivity analysis for manuscript figure 3 using only data with complete geolocation information and known race/ethnicity.
 
 ```{r known_sens_analyses_blues, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/puma_level_data.csv")
+cases <- fread("./puma_level_data.csv")
 cases <- cases[race_grp!="ALL" & race_grp!="Unknown"]
 
 cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
@@ -466,7 +466,7 @@ print(plot)
 Figure S8. Sensitivity analysis for manuscript figure 4 using only data with complete geolocation information and known race/ethnicity.
 
 ```{r known_sens_analyses2, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- fread(".puma_mapping_2010.csv")
 puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
 
 data(fips_codes)
@@ -483,7 +483,7 @@ puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, 
 puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
 
 # Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
-puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- fread(".puma_name_list.csv")
 puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
 puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
 puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
@@ -502,7 +502,7 @@ for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White"
 puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
 puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
 
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/puma_level_data.csv")
+cases <- fread("./puma_level_data.csv")
 cases <- cases[race_grp!="ALL" & race_grp!="Unknown"]
 
 cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
@@ -521,7 +521,7 @@ cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June"
 cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
 
 county_df <- merge(cases, puma_mapping_out, by = c("PUMA", "race_grp"), allow.cartesian = T)
-regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+regions <- fread("./county_to_region_appendix.csv")
 county_df <- merge(county_df, regions, by = "county")
 county_df <- unique(county_df[,.(PUMA, race_grp, tot_persons_point, tpr_topcoded, month, test_rate_topcoded,
                                  topcode_indic, region_map, crowd_essential_topcoded, row_id)])
@@ -584,7 +584,7 @@ Figure S9. Sensitivity analysis for time trends in ACS joint-exposure indicator.
 
 ```{r scatters_year, fig.width=8, fig.height=6, message=F, warning=F}
 
-df <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/appendix_sens_year.csv")
+df <- fread("./appendix_sens_year.csv")
 
 plot <- ggplot(data = df[race_grp=="ALL"], aes(x = MULTYEAR, y = crowd_essential_point_perc)) + geom_line(aes(group = PUMA, alpha = tot_persons_point)) +
   theme_bw() +
@@ -613,7 +613,7 @@ print(plot)
 ```
 
 ```{r scatters, fig.width=8, fig.height=6, message=F, warning=F}
-puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- fread("./puma_mapping_2010.csv")
 puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
 
 data(fips_codes)
@@ -630,7 +630,7 @@ puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, 
 puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
 
 # Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
-puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- fread("./puma_name_list.csv")
 puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
 puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
 puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
@@ -649,8 +649,8 @@ for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White"
 puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
 puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
 
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_final.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 
@@ -670,7 +670,7 @@ cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June"
 cases <- merge(cases, puma_mapping_out[,.(id, county, PUMA, race_grp)], by = c("PUMA", "race_grp"))
 df <- copy(cases)
 
-regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+regions <- fread("./county_to_region_appendix.csv")
 df <- merge(df, regions, by = "county")
 
 df <- df[race_grp=="ALL" & month!="March"] 
@@ -719,8 +719,8 @@ Figure S11. Test rate (per 100,000 population) vs. household exposure risk, by P
 Figure S12. Test positivity rate, by race and colored by percent of people living in household with high exposure risk, shown for April through September and grouped by region.
 
 ```{r scatters_all, fig.width=8, fig.height=10, message=F, warning=F}
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_final.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 cases <- cases[race_grp!="ALL"]
@@ -751,7 +751,7 @@ cases <- cases[race_grp == "Non-Hispanic White", race_grp:="White"]
 cases <- cases[, race_grp:=factor(race_grp, levels = c("Latino", "Black", "White", "Other"))]
 
 
-regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+regions <- fread("./county_to_region_appendix.csv")
 cases <- merge(cases, regions, by = "county")
 cases <- cases[, region_map:=factor(region_map, levels = c("North", "Bay", "Central", "Upper Southern", "Lower Southern"))]
 
@@ -804,8 +804,8 @@ Figure S13. Test positivity rate, by race and colored by test rate per 100,000 p
 
 ```{r scatters_all_months, fig.width=8, fig.height=10, message=F, warning=F}
 
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_final.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 cases <- cases[race_grp!="ALL"]
@@ -826,7 +826,7 @@ cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June"
 cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
 
 county_df <- merge(cases, puma_mapping_out, by = c("PUMA", "race_grp"), allow.cartesian = T)
-regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+regions <- fread("./county_to_region_appendix.csv")
 county_df <- merge(county_df, regions, by = "county")
 county_df <- unique(county_df[,.(PUMA, race_grp, tot_persons_point, tpr_topcoded, month, test_rate_topcoded,
                                  topcode_indic, region_map, crowd_essential_topcoded, row_id)])
@@ -883,7 +883,7 @@ print(plot)
 ```
 
 ```{r dataprep2, fig.width=8, fig.height=6, message=F, warning=F}
-puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- fread("./puma_mapping_2010.csv")
 puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
 
 data(fips_codes)
@@ -900,7 +900,7 @@ puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, 
 puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
 
 # Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
-puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- fread("./puma_name_list.csv")
 puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
 puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
 puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
@@ -919,8 +919,8 @@ for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White"
 puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
 puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
 
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_final.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 
@@ -940,7 +940,7 @@ cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June"
 cases <- merge(cases, puma_mapping_out[,.(id, county, PUMA, race_grp)], by = c("PUMA", "race_grp"))
 df <- copy(cases)
 
-regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+regions <- fread("./county_to_region_appendix.csv")
 df <- merge(df, regions, by = "county")
 
 df <- df[race_grp=="ALL" & month!="March"] 
@@ -1005,8 +1005,8 @@ Figure S15. Household exposure risk vs. case rate (per 100,000 population), by P
 
 
 ```{r state_insets, echo = F, fig.width=7, fig.height=10, message=F, warning=F}
-out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
-cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+out_race <- fread("./puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("./redistributed_final.csv")
 
 cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
 
@@ -1027,9 +1027,9 @@ indic_df <- merge(indic_df, small_df, by = "PUMA")
 indic_df <- indic_df[, id:=paste0("6_", PUMA)]
 indic_df <- indic_df[race_grp=="ALL"]
 
-regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+regions <- fread("./county_to_region_appendix.csv")
 
-map_df <- fread("~/COVID/acs_household_analysis/CA_analysis/CA_Vulnerability/puma_map_race.csv")
+map_df <- fread("./puma_map_race.csv")
 map_df <- unique(map_df[,.(id, long, lat, order, hole, piece, group)])
 
 map_df <- merge(map_df, indic_df, by = "id", allow.cartesian = T)
@@ -1040,7 +1040,7 @@ map_df <- map_df[drop == 0]
 map_df <- map_df[, drop:=ifelse(id=="6_11106" & lat<33.5, 1, 0)]
 map_df <- map_df[drop == 0]
 
-county_outlines <- readRDS("~/COVID/acs_household_analysis/county_map.RDS")
+county_outlines <- readRDS("./county_map.RDS")
 county_outlines <- county_outlines[county_outlines$STATEFP=="06",]
 county_outlines_dt <- suppressWarnings(fortify(county_outlines, region = "COUNTYFP"))
 county_outlines_dt <- merge(county_outlines_dt, unique(puma_mapping_out[,.(county, COUNTYFP)]), by.y="COUNTYFP", by.x="id", all.x=T)
