@@ -1,0 +1,1224 @@
+---
+title: "Racial/Ethnic Disparities in Covid-19 Transmission Risk Exposure, Testing, and Cases at the Sub-County Level in California"
+subtitle: "Supplemental Appendix"
+output: 
+  pdf_document:
+fontsize: 12pt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+## Load packages
+library(tidyverse)
+library(data.table)
+library(tigris)
+library(viridis)
+library(ggplot2)
+library(acs)
+library(usmap)
+library(zoo)
+library(grid)
+library(gridExtra)
+library(cowplot)
+library(MMWRweek)
+library(scales)
+library(hrbrthemes)
+```
+
+
+\newpage
+
+\section{Geographic Regions}
+We use the five California Department of Public Health Regions to group PUMAs in some figures. PUMAs are nested in counties, which are grouped into regions, listed below. 
+
+\begin{itemize}
+  \item \textbf{North Region}: Butte County, Colusa County, Glenn County, Tehama County, Trinity County, Del Norte County, Lassen County, Modoc County, Plumas County, Siskiyou County, El Dorado County, Humboldt County, Lake County, Mendocino County, Nevada County, Sierra County, Placer County, Sacramento County, Shasta County, Sutter County, Yuba County, Yolo County
+  \item \textbf{Bay Area Region}: Alameda County, Contra Costa County, Marin County, Napa County, San Francisco County, San Mateo County, Santa Clara County, Santa Cruz County, Solano County, Sonoma County
+  \item \textbf{Central Region}: Alpine County$\ast$, Amador County$\ast$, Calaveras County$\ast$, Fresno County, Inyo County, Kings County, Mariposa County, Mono County, Madera County, Merced County, Monterey County, San Benito County, San Joaquin County, Stanislaus County, Tulare County, Tuolumne County
+  \item \textbf{Upper Southern Region}: Kern County, Los Angeles County, San Luis Obispo County, Santa Barbara County, Ventura County
+  \item \textbf{Lower Southern Region}: Imperial County, Orange County, Riverside County, San Bernardino County, San Diego County
+\end{itemize}
+
+$\ast$Alpine, Amador, and Calaveras Counties are combined in a single PUMA with Inyo, Mariposa, Mono, and Tuolumne Counties due to small population sizes. California Department of Public Health Regions have Alpine, Amador, and Calaveras Counties included in the North Region, but we include these counties in the Central Region for consistency with PUMA definitions.
+
+\section{Sensitivity Analyses}
+
+\subsection{Distribution of Cases and Tests with Missing Geolocation or Missing Race/Ethnicity}
+
+Statewide, there were a total of 831,882 confirmed Covid-19 cases in California between March 22nd and October 3rd, 2020. Of these, 735,054 (88.4%) had a residential geolocation available that allowed the case to be assigned to a Public Use Microdata Area (PUMA). Over the same time period, there were 14,500,819 tests conducted statewide using polymerase chain reaction (PCR). A smaller proportion of tests (73%, n=10,583,506) had a residential geolocation available, compared to cases. Additionally, 236,454 cases (28.4% of total cases) and 7,830,384 tests (54.0% of total tests) had unknown race/ethnicity.
+
+At minimum, all cases and tests had information on county. Counties with small populations were grouped together into merged county groups for data privacy purposes. The following counties were grouped together:
+
+\begin{itemize}
+  \item \textbf{Central Sierra}: Alpine, Amador, Calaveras, Inyo, Mariposa, Mono, and Tuolumne Counties
+  \item \textbf{Greater Sacramento}: El Dorado, Sutter, Yolo, and Yuba Counties
+  \item \textbf{Napa and Sonoma}: Napa and Sonoma Counties
+  \item \textbf{Northern California}: Del Norte, Humboldt, Lake, Lassen, Mendocino, Modoc, Nevada, Plumas, Sierra, Siskiyou, and Trinity Counties
+  \item \textbf{Northern Sacramento Valley}: Butte, Colusa, Glenn, Shasta, and Tehama Counties
+  \item \textbf{San Joaquin Valley}: Kings and Madera Counties
+  \item \textbf{Santa Cruz and San Benito}: Santa Cruz and San Benito Counties
+\end{itemize}
+
+In order to provide a realistic estimate of the true level of tests, cases, and test positivity, by race/ethnicity and PUMA, we distributed the tests and cases with unknown residential geolocation and unknown race/ethnicity for the main analysis. We took the following approach to distribution:
+
+\begin{itemize}
+  \item Cases and tests with unknown geolocation and known race/ethnicity: use the observed PUMA distribution by race/ethnicity within a county (or merged county group) to distribute these cases and tests
+  \item Cases and tests with known geolocation and unknown race/ethnicity: use the observed race/ethnicity distribution within a PUMA to distribute these cases and tests
+  \item Cases and tests with unknown geolocation and unknown race/ethnicity: use the joint observed PUMA and race/ethnicity distribution within a county (or merged county group) to distribute these cases and tests
+\end{itemize}
+
+First, we show heatmaps by county showing the percent of tests and cases with residential geolocation information (appendix pages 4-5).
+
+Then, for sensitivity analyses, we present results using distribution based on population size (as opposed to by observed cases and tests) (appendix pages 6-8) and using only data with complete information (appendix pages 9-11). Distribution by population size likely underestimates true disparities, because the assumption is that all unknown cases and tests are distributed proportional to population. Using only data with complete information underestimates true levels of cases and tests, particularly for tests because of the greater proportion of tests with missing information.
+
+
+\subsection{Definition of Essential Worker}
+
+We used the list of jobs classified as essential published by the Department of Homeland Security Cybersecurity and Infrastructure Security Agency (CISA), which has been previously used in multiple studies analyzing essential workers and Covid-19. We tested the sensitivity of our results to more restrictive definitions of essential workers that also include aspects of proximity to other people at work and ability to work from home. These alternative definitions were previously published by Mongey, Pilossoph, and Weinberg in NBER working paper 27085 (https://www.nber.org/papers/w27085). They were constructed using the O NET occupational database. We find that additional restrictions on essential worker based on ability to work from home or proximity to others at work marginally reduced the number of people "exposed" as living in households with fewer rooms than people and at least one essential worker, but did not change the substantive findings, including observed disparities in exposure by race/ethnicity and the observed associations between exposure and outcomes. Using the CISA essential worker classifications alone, approximately 13% of people in California live in a household with fewer rooms than people and at least one essential worker. Further restricting individuals classified as essential workers to those that are unlikely to be able to work remotely, this number drops to 11% of people. Finally, 7% of California's population would be included if we restrict to only those classified as essential workers who are unlikely to be able to work remotely and who are unlikely to be able to practice physical distancing at work.
+
+\subsection{Temporal Changes in Exposure from the American Community Survey}
+
+The most recent 5-year microdata available from the American Community Survey cover the time period from 2014-2018. Although there is certainly dynamic change in occupation and housing during the five year time period and also in the post-survey period since 2018, at the PUMA-level, results are relatively constant, mitigating some concern about this potential data limitation. The rank correlation comparing PUMAs in 2014 to PUMAs in 2018 is 0.84. We present annual estimates from 2014-2018 by PUMA (appendix page 12) and by race/ethnicity within each PUMA (appendix page 13).
+
+\newpage
+
+Figure S1. Percent of tests with PUMA-level residential geolocation available, out of all tests in a county.
+
+```{r heatmap_tests, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+load("~/Downloads/test_heat_map_appendix2020-11-30 (1).RData")
+print(test_heat_map)
+```
+
+\newpage
+
+Figure S2. Percent of cases with PUMA-level residential geolocation available, out of all cases in a county.
+
+```{r heatmap_cases, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+load("~/Downloads/case_heat_map_appendix2020-11-30 (1).RData")
+print(case_heat_map)
+```
+
+\newpage
+
+Figure S3. Sensitivity analysis for manuscript figure 2 distributing cases and tests with missing data based on population size.
+
+```{r unknown_sens_analyses, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_population_sensitivity.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+cases <- cases[race_grp=="ALL"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.15, .15, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.3, .3, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(crowd_essential_point_perc>.3 |
+                                         tpr>.15 |
+                                         test_rate > 15000,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+plot <- ggplot(data = cases[month%in%c("May", "July", "September") &
+                      !is.na(tpr_topcoded)], aes(x = test_rate_topcoded, y = crowd_essential_topcoded)) +
+  geom_point(data = cases[month%in%c("May", "July", "September") & !is.na(tpr_topcoded)],
+             aes(color = tpr_topcoded,
+                 shape = as.factor(topcode_indic)), alpha = .7, size = 5) +
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#577590", "#43AA8B", "#90BE6D", "#F9C74F","#F8961E", "#F3722C",  "#F94144"), breaks = c(0, .05, .1, .15, .2),
+                        labels = scales::percent) +
+  labs(x = "Test Rate (Per 100,000)", y = "Household Exposure Risk", size = "Population (Thousands)", color = "TPR", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(breaks = c(0, 5000, 10000, 15000)) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_wrap(~month, ncol =6) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+print(plot)
+
+```
+
+\newpage
+
+Figure S4. Sensitivity analysis for manuscript figure 3 distributing cases and tests with missing data based on population size.
+
+```{r unknown_sens_analyses_blues, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_population_sensitivity.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+cases <- cases[race_grp!="ALL"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.4, .4, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.3, .3, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(crowd_essential_point_perc>.3 |
+                                        tpr>.4,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
+
+months <- c("April", "May", "June", "July", "August", "September")
+months <- c("May", "July", "September")
+
+cases <- cases[race_grp == "Hispanic/Latinx", race_grp:="Latino"]
+cases <- cases[race_grp == "Non-Hispanic Black", race_grp:="Black"]
+cases <- cases[race_grp == "Non-Hispanic White", race_grp:="White"]
+
+cases <- cases[, race_grp:=factor(race_grp, levels = c("Latino", "Black", "White", "Other"))]
+
+plot <- ggplot(data = cases[month%in%months & !is.na(tpr_topcoded)], aes(x = tpr_topcoded, y = race_grp)) +
+  geom_point(data = cases[month%in%months& !is.na(tpr_topcoded) & row_id==1],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==2],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==3],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==5],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==4],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#577590", "#43AA8B", "#90BE6D", "#F9C74F","#F8961E", "#F3722C",  "#F94144"), breaks = c(0, .1, .2, .3),
+                        labels = scales::percent) +
+  scale_size_continuous(range = c(.01, 6), breaks = c(10, 60, 110)) +
+  labs(x = "Test Positivity Rate", y = "", size = "Population\n(Thousands)", color = "Household\nExposure Risk    ", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20)) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_wrap(~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+print(plot)
+
+```
+
+\newpage
+
+Figure S5. Sensitivity analysis for manuscript figure 4 distributing cases and tests with missing data based on population size.
+
+
+```{r unknown_sens_analyses2, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+
+data(fips_codes)
+fips_codes <- as.data.table(fips_codes)
+setnames(fips_codes, c("state_code", "county_code"), c("STATEFP", "COUNTYFP"))
+fips_codes <- fips_codes[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+fips_codes <- fips_codes[, STATEFP_num:=as.numeric(STATEFP)]
+fips_codes <- fips_codes[, COUNTYFP_num:=as.numeric(COUNTYFP)]
+
+setnames(puma_mapping, c("STATEFP", "COUNTYFP"), c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- merge(puma_mapping, fips_codes, by = c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- puma_mapping[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, county)])
+puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
+
+# Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
+puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
+puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
+puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
+setnames(puma_name_list, "PUMA5CE", "PUMA")
+puma_name_list <- puma_name_list[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+
+puma_mapping <- merge(puma_mapping, puma_name_list[,.(id, puma_name)], by = "id")
+
+puma_mapping_out <- NULL
+for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White", "Other")) {
+  temp <- copy(puma_mapping)
+  temp <- temp[, race_grp:=i]
+  puma_mapping_out<-rbind(puma_mapping_out, temp, fill = T)
+}
+
+puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
+puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
+
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_population_sensitivity.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+cases <- cases[race_grp!="ALL"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.4, .4, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.35, .35, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(test_rate>15000 |
+                                         tpr>.4,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
+
+county_df <- merge(cases, puma_mapping_out, by = c("PUMA", "race_grp"), allow.cartesian = T)
+regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+county_df <- merge(county_df, regions, by = "county")
+county_df <- unique(county_df[,.(PUMA, race_grp, tot_persons_point, tpr_topcoded, month, test_rate_topcoded,
+                                 topcode_indic, region_map, crowd_essential_topcoded, row_id)])
+county_df <- county_df[, region_map:=factor(region_map, levels = c("North", "Bay", "Central", "Upper Southern", "Lower Southern"))]
+
+county_df <- county_df[race_grp == "Hispanic/Latinx", race_grp:="Latino"]
+county_df <- county_df[race_grp == "Non-Hispanic Black", race_grp:="Black"]
+county_df <- county_df[race_grp == "Non-Hispanic White", race_grp:="White"]
+
+county_df <- county_df[, race_grp:=factor(race_grp, levels = c("Latino", "Black", "White", "Other"))]
+
+
+plot <- ggplot(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded)], aes(x = tpr_topcoded, y = race_grp)) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==1],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==2],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==3],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==5],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==4],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#03045e", "#0077b6", "#00b4d8", "#90e0ef")) +
+  #                       labels = scales::percent) +
+  #scale_color_distiller(palette = "GnBu") +
+  scale_size_continuous(range = c(.01, 6), breaks = c(10, 60, 110)) +
+  labs(x = "Test Positivity Rate", y = "", size = "Population\n(Thousands)", color = "Test Rate\n(Per 100,000)", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20), strip.text = element_text(size = 12)) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_grid(region_map~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+print(plot)
+
+```
+
+\newpage
+
+Figure S6. Sensitivity analysis for manuscript figure 2 using only data with complete geolocation information.
+
+```{r known_sens_analyses, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/puma_level_data.csv")
+cases <- cases[race_grp=="ALL"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.15, .15, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.3, .3, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(crowd_essential_point_perc>.3 |
+                                         tpr>.15 |
+                                         test_rate > 15000,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+plot <- ggplot(data = cases[month%in%c("May", "July", "September") &
+                      !is.na(tpr_topcoded)], aes(x = test_rate_topcoded, y = crowd_essential_topcoded)) +
+  geom_point(data = cases[month%in%c("May", "July", "September") & !is.na(tpr_topcoded)],
+             aes(color = tpr_topcoded,
+                 shape = as.factor(topcode_indic)), alpha = .7, size = 5) +
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#577590", "#43AA8B", "#90BE6D", "#F9C74F","#F8961E", "#F3722C",  "#F94144"), breaks = c(0, .05, .1, .15, .2),
+                        labels = scales::percent) +
+  labs(x = "Test Rate (Per 100,000)", y = "Household Exposure Risk", size = "Population (Thousands)", color = "TPR", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(breaks = c(0, 5000, 10000, 15000)) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_wrap(~month, ncol =6) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+print(plot)
+
+```
+
+\newpage
+
+Figure S7. Sensitivity analysis for manuscript figure 3 using only data with complete geolocation information and known race/ethnicity.
+
+```{r known_sens_analyses_blues, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/puma_level_data.csv")
+cases <- cases[race_grp!="ALL" & race_grp!="Unknown"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.4, .4, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.3, .3, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(crowd_essential_point_perc>.3 |
+                                        tpr>.4,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
+
+months <- c("April", "May", "June", "July", "August", "September")
+months <- c("May", "July", "September")
+
+cases <- cases[race_grp == "Hispanic/Latinx", race_grp:="Latino"]
+cases <- cases[race_grp == "Non-Hispanic Black", race_grp:="Black"]
+cases <- cases[race_grp == "Non-Hispanic White", race_grp:="White"]
+
+cases <- cases[, race_grp:=factor(race_grp, levels = c("Latino", "Black", "White", "Other"))]
+
+plot <- ggplot(data = cases[month%in%months & !is.na(tpr_topcoded)], aes(x = tpr_topcoded, y = race_grp)) +
+  geom_point(data = cases[month%in%months& !is.na(tpr_topcoded) & row_id==1],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==2],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==3],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==5],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==4],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#577590", "#43AA8B", "#90BE6D", "#F9C74F","#F8961E", "#F3722C",  "#F94144"), breaks = c(0, .1, .2, .3),
+                        labels = scales::percent) +
+  scale_size_continuous(range = c(.01, 6), breaks = c(10, 60, 110)) +
+  labs(x = "Test Positivity Rate", y = "", size = "Population\n(Thousands)", color = "Household\nExposure Risk    ", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20)) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_wrap(~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+print(plot)
+
+```
+
+\newpage
+
+Figure S8. Sensitivity analysis for manuscript figure 4 using only data with complete geolocation information and known race/ethnicity.
+
+```{r known_sens_analyses2, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
+puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+
+data(fips_codes)
+fips_codes <- as.data.table(fips_codes)
+setnames(fips_codes, c("state_code", "county_code"), c("STATEFP", "COUNTYFP"))
+fips_codes <- fips_codes[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+fips_codes <- fips_codes[, STATEFP_num:=as.numeric(STATEFP)]
+fips_codes <- fips_codes[, COUNTYFP_num:=as.numeric(COUNTYFP)]
+
+setnames(puma_mapping, c("STATEFP", "COUNTYFP"), c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- merge(puma_mapping, fips_codes, by = c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- puma_mapping[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, county)])
+puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
+
+# Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
+puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
+puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
+puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
+setnames(puma_name_list, "PUMA5CE", "PUMA")
+puma_name_list <- puma_name_list[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+
+puma_mapping <- merge(puma_mapping, puma_name_list[,.(id, puma_name)], by = "id")
+
+puma_mapping_out <- NULL
+for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White", "Other")) {
+  temp <- copy(puma_mapping)
+  temp <- temp[, race_grp:=i]
+  puma_mapping_out<-rbind(puma_mapping_out, temp, fill = T)
+}
+
+puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
+puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
+
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/puma_level_data.csv")
+cases <- cases[race_grp!="ALL" & race_grp!="Unknown"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.4, .4, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.35, .35, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(test_rate>15000 |
+                                         tpr>.4,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
+
+county_df <- merge(cases, puma_mapping_out, by = c("PUMA", "race_grp"), allow.cartesian = T)
+regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+county_df <- merge(county_df, regions, by = "county")
+county_df <- unique(county_df[,.(PUMA, race_grp, tot_persons_point, tpr_topcoded, month, test_rate_topcoded,
+                                 topcode_indic, region_map, crowd_essential_topcoded, row_id)])
+county_df <- county_df[, region_map:=factor(region_map, levels = c("North", "Bay", "Central", "Upper Southern", "Lower Southern"))]
+
+county_df <- county_df[race_grp == "Hispanic/Latinx", race_grp:="Latino"]
+county_df <- county_df[race_grp == "Non-Hispanic Black", race_grp:="Black"]
+county_df <- county_df[race_grp == "Non-Hispanic White", race_grp:="White"]
+
+county_df <- county_df[, race_grp:=factor(race_grp, levels = c("Latino", "Black", "White", "Other"))]
+
+
+plot <- ggplot(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded)], aes(x = tpr_topcoded, y = race_grp)) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==1],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==2],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==3],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==5],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%c("May", "July", "September") & !is.na(tpr_topcoded) & row_id==4],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#03045e", "#0077b6", "#00b4d8", "#90e0ef")) +
+  #                       labels = scales::percent) +
+  #scale_color_distiller(palette = "GnBu") +
+  scale_size_continuous(range = c(.01, 6), breaks = c(10, 60, 110)) +
+  labs(x = "Test Positivity Rate", y = "", size = "Population\n(Thousands)", color = "Test Rate\n(Per 100,000)", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20), strip.text = element_text(size = 12)) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_grid(region_map~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+print(plot)
+
+```
+
+\newpage
+
+Figure S9. Sensitivity analysis for time trends in ACS joint-exposure indicator. Lines are PUMAs, darker shade indicates larger population.
+
+```{r scatters_year, fig.width=8, fig.height=6, message=F, warning=F}
+
+df <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/appendix_sens_year.csv")
+
+plot <- ggplot(data = df[race_grp=="ALL"], aes(x = MULTYEAR, y = crowd_essential_point_perc)) + geom_line(aes(group = PUMA, alpha = tot_persons_point)) +
+  theme_bw() +
+  labs(x = "Year", y = "% with rooms < people and >=1 essential worker", alpha = "Population") +
+  theme(legend.position = "bottom") +
+  scale_y_continuous(labels = scales::percent, limits = c(0, .5))
+print(plot)
+
+```
+
+\newpage 
+
+Figure S10. Sensitivity analysis for time trends in ACS joint-exposure indicator, by race/ethnicity. Lines are PUMAs, darker shade indicates larger population. Some PUMAs have unstable estimates by race/ethnicity due to small populations, motivating the use of the five-year combined estimates since there are negligible temporal trends.
+
+```{r scatters_year2, fig.width=8, fig.height=6, message=F, warning=F}
+df <- df[race_grp=="Hispanic/Latinx", race_grp:="Latino"]
+df <- df[race_grp=="Non-Hispanic Black", race_grp:="Black"]
+df <- df[race_grp=="Non-Hispanic White", race_grp:="White"]
+
+plot <- ggplot(data = df[race_grp!="ALL"], aes(x = MULTYEAR, y = crowd_essential_point_perc)) + geom_line(aes(group = PUMA, alpha = tot_persons_point)) +
+  theme_bw() + facet_wrap(~race_grp) +
+  labs(x = "Year", y = "% with rooms < people and >=1 essential worker", alpha = "Population") +
+  theme(legend.position = "bottom") +
+  scale_y_continuous(labels = scales::percent, limits = c(0, .75))
+print(plot)
+```
+
+```{r scatters, fig.width=8, fig.height=6, message=F, warning=F}
+puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+
+data(fips_codes)
+fips_codes <- as.data.table(fips_codes)
+setnames(fips_codes, c("state_code", "county_code"), c("STATEFP", "COUNTYFP"))
+fips_codes <- fips_codes[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+fips_codes <- fips_codes[, STATEFP_num:=as.numeric(STATEFP)]
+fips_codes <- fips_codes[, COUNTYFP_num:=as.numeric(COUNTYFP)]
+
+setnames(puma_mapping, c("STATEFP", "COUNTYFP"), c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- merge(puma_mapping, fips_codes, by = c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- puma_mapping[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, county)])
+puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
+
+# Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
+puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
+puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
+puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
+setnames(puma_name_list, "PUMA5CE", "PUMA")
+puma_name_list <- puma_name_list[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+
+puma_mapping <- merge(puma_mapping, puma_name_list[,.(id, puma_name)], by = "id")
+
+puma_mapping_out <- NULL
+for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White", "Other", "Unknown")) {
+  temp <- copy(puma_mapping)
+  temp <- temp[, race_grp:=i]
+  puma_mapping_out<-rbind(puma_mapping_out, temp, fill = T)
+}
+
+puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
+puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
+
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.15, .15, tpr)]
+cases <- cases[, crowd_essential_point_perc_topcoded:=ifelse(crowd_essential_point_perc>.3, .3, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+# cases <- cases[, topcode_indic:=ifelse(crowd_essential_point_perc>.3 |
+#                                          tpr>.15 |
+#                                          test_rate > 15000,
+#                                        "Topcoded", "Not Topcoded")]
+# 
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+cases <- merge(cases, puma_mapping_out[,.(id, county, PUMA, race_grp)], by = c("PUMA", "race_grp"))
+df <- copy(cases)
+
+regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+df <- merge(df, regions, by = "county")
+
+df <- df[race_grp=="ALL" & month!="March"] 
+df <- df[, region_map:=factor(region_map, levels = c("North", "Bay", "Central", "Upper Southern", "Lower Southern"))]
+
+df <- df[, topcode_indic:=ifelse(test_rate > 15000 | 
+                                   tpr > .15 |
+                                   crowd_essential_point_perc > .3, 1 , 0)]
+```
+
+\newpage
+
+\section{Supplemental Results}
+
+Here we present manuscript figures 2-4 for all months April through September and separate by region (appendix pages 15-17). Additionally, we show scatter plots between our joint measure of household exposure risk and case rates and test rates. Each point represents one PUMA, and results are shown by month and region (appendix pages 18-19). Finally, we present maps similar to those shown in Figure 1 of the manuscript for each of the five regions (appendix pages 20-24) and for counties with more than four PUMAs (appendix pages 25-38). Scales for the plots vary to highlight within-county differences.
+
+\newpage
+
+Figure S11. Test rate (per 100,000 population) vs. household exposure risk, by PUMA and colored by test positivity rate, shown for April through September and grouped by region.
+
+```{r scatters_all_months_fig1, fig.width=8, fig.height=10, message=F, warning=F}
+  plot <- ggplot(data = df[month%in%c("April", "May", "June", "July", "August", "September") &
+                      !is.na(tpr_topcoded)], aes(x = test_rate_topcoded, y = crowd_essential_point_perc_topcoded)) +
+  geom_point(data = df[month%in%c("April", "May", "June", "July", "August", "September") & !is.na(tpr_topcoded)],
+             aes(color = tpr_topcoded,
+                 #size = case_rate_topcoded,
+                 shape = as.factor(topcode_indic)), alpha = .7, size = 2.5) +
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#577590", "#43AA8B", "#90BE6D", "#F9C74F","#F8961E", "#F3722C",  "#F94144"), breaks = c(0, .05, .1, .15),
+                        labels = scales::percent) +
+  labs(x = "Test Rate (Per 100,000)", y = "Household Exposure Risk", size = "Population (Thousands)", color = "TPR", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20), strip.text = element_text(size = 12)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(breaks = c(0, 5000, 10000, 15000)) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_grid(region_map~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+  print(plot)
+
+```
+
+\newpage
+
+Figure S12. Test positivity rate, by race and colored by percent of people living in household with high exposure risk, shown for April through September and grouped by region.
+
+```{r scatters_all, fig.width=8, fig.height=10, message=F, warning=F}
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+cases <- cases[race_grp!="ALL"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.4, .4, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.3, .3, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(crowd_essential_point_perc>.3 |
+                                        tpr>.4,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
+
+months <- c("April", "May", "June", "July", "August", "September")
+
+cases <- merge(cases, puma_mapping_out[,.(id, county, PUMA, race_grp)], by = c("PUMA", "race_grp"))
+
+cases <- cases[race_grp == "Hispanic/Latinx", race_grp:="Latino"]
+cases <- cases[race_grp == "Non-Hispanic Black", race_grp:="Black"]
+cases <- cases[race_grp == "Non-Hispanic White", race_grp:="White"]
+
+cases <- cases[, race_grp:=factor(race_grp, levels = c("Latino", "Black", "White", "Other"))]
+
+
+regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+cases <- merge(cases, regions, by = "county")
+cases <- cases[, region_map:=factor(region_map, levels = c("North", "Bay", "Central", "Upper Southern", "Lower Southern"))]
+
+plot <- ggplot(data = cases[month%in%months & !is.na(tpr_topcoded)], aes(x = tpr_topcoded, y = race_grp)) +
+  geom_point(data = cases[month%in%months& !is.na(tpr_topcoded) & row_id==1],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==2],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==3],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==5],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = cases[month%in%months & !is.na(tpr_topcoded) & row_id==4],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = crowd_essential_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#577590", "#43AA8B", "#90BE6D", "#F9C74F","#F8961E", "#F3722C",  "#F94144"), breaks = c(0, .1, .2, .3),
+                        labels = scales::percent) +
+  scale_size_continuous(range = c(.01, 6), breaks = c(10, 60, 110)) +
+  labs(x = "Test Positivity Rate", y = "", size = "Population\n(Thousands)", color = "Household\nExposure Risk    ", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 14), strip.text = element_text(size = 12)) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_grid(region_map~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+
+print(plot)
+```
+
+\newpage
+
+Figure S13. Test positivity rate, by race and colored by test rate per 100,000 population, shown for April through September and grouped by region.
+
+```{r scatters_all_months, fig.width=8, fig.height=10, message=F, warning=F}
+
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+cases <- cases[race_grp!="ALL"]
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.4, .4, tpr)]
+cases <- cases[, crowd_essential_topcoded:=ifelse(crowd_essential_point_perc>.35, .35, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+cases <- cases[, topcode_indic:=ifelse(test_rate>15000 |
+                                         tpr>.4,
+                                       "Topcoded", "Not Topcoded")]
+
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+
+cases$row_id <- sample(factor(rep(1:5, length.out=nrow(cases))))
+
+county_df <- merge(cases, puma_mapping_out, by = c("PUMA", "race_grp"), allow.cartesian = T)
+regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+county_df <- merge(county_df, regions, by = "county")
+county_df <- unique(county_df[,.(PUMA, race_grp, tot_persons_point, tpr_topcoded, month, test_rate_topcoded,
+                                 topcode_indic, region_map, crowd_essential_topcoded, row_id)])
+county_df <- county_df[, region_map:=factor(region_map, levels = c("North", "Bay", "Central", "Upper Southern", "Lower Southern"))]
+
+county_df <- county_df[race_grp == "Hispanic/Latinx", race_grp:="Latino"]
+county_df <- county_df[race_grp == "Non-Hispanic Black", race_grp:="Black"]
+county_df <- county_df[race_grp == "Non-Hispanic White", race_grp:="White"]
+
+county_df <- county_df[, race_grp:=factor(race_grp, levels = c("Latino", "Black", "White", "Other"))]
+
+
+plot <- ggplot(data = county_df[month%in%months & !is.na(tpr_topcoded)], aes(x = tpr_topcoded, y = race_grp)) +
+  geom_point(data = county_df[month%in%months & !is.na(tpr_topcoded) & row_id==1],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%months & !is.na(tpr_topcoded) & row_id==2],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%months & !is.na(tpr_topcoded) & row_id==3],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%months & !is.na(tpr_topcoded) & row_id==5],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  geom_point(data = county_df[month%in%months & !is.na(tpr_topcoded) & row_id==4],
+             position = position_jitter(width = 0, height =0.4),
+             aes(color = test_rate_topcoded,
+                 size = tot_persons_point/1000,
+                 shape = as.factor(topcode_indic)), alpha = .6) +
+  
+  theme_bw() + 
+  scale_color_gradientn(colors = c( "#03045e", "#0077b6", "#00b4d8", "#90e0ef")) +
+  #                       labels = scales::percent) +
+  #scale_color_distiller(palette = "GnBu") +
+  scale_size_continuous(range = c(.01, 8), breaks = c(10, 60, 110)) +
+  labs(x = "Test Positivity Rate", y = "", size = "Population\n(Thousands)", color = "Test Rate\n(Per 100,000)", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 14), strip.text = element_text(size = 12)) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_grid(region_map~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+print(plot)
+```
+
+```{r dataprep2, fig.width=8, fig.height=6, message=F, warning=F}
+puma_mapping <- fread("~/COVID/acs_household_analysis/puma_mapping_2010.csv")
+puma_mapping <- puma_mapping[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+
+data(fips_codes)
+fips_codes <- as.data.table(fips_codes)
+setnames(fips_codes, c("state_code", "county_code"), c("STATEFP", "COUNTYFP"))
+fips_codes <- fips_codes[STATEFP==46 & COUNTYFP==113, COUNTYFP:=102]
+fips_codes <- fips_codes[, STATEFP_num:=as.numeric(STATEFP)]
+fips_codes <- fips_codes[, COUNTYFP_num:=as.numeric(COUNTYFP)]
+
+setnames(puma_mapping, c("STATEFP", "COUNTYFP"), c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- merge(puma_mapping, fips_codes, by = c("STATEFP_num", "COUNTYFP_num"))
+puma_mapping <- puma_mapping[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+puma_mapping <- unique(puma_mapping[,.(STATEFP, COUNTYFP, PUMA, id, state_name, county)])
+puma_mapping <- puma_mapping[!(id=="46_200" & county == "Shannon County")]
+
+# Clean up list of puma names downloaded from https://www2.census.gov/geo/pdfs/reference/puma/2010_PUMA_Names.pdf?#
+puma_name_list <- fread("~/COVID/acs_household_analysis/puma_name_list.csv")
+puma_name_list <- puma_name_list[, puma_name:=paste(Name1, Name2, Name3, Name4, Name5, Name6, Name7, Name8, Name9, Name10, Name11, Name12, Name13, Name14, sep=" ")]
+puma_name_list <- puma_name_list[, .(STATEFP, PUMA5CE, puma_name)]
+puma_name_list <- puma_name_list[, puma_name:=trimws(puma_name)]
+setnames(puma_name_list, "PUMA5CE", "PUMA")
+puma_name_list <- puma_name_list[, id:=paste0(as.numeric(STATEFP), "_", as.numeric(PUMA))]
+
+puma_mapping <- merge(puma_mapping, puma_name_list[,.(id, puma_name)], by = "id")
+
+puma_mapping_out <- NULL
+for (i in c("ALL", "Hispanic/Latinx", "Non-Hispanic Black", "Non-Hispanic White", "Other", "Unknown")) {
+  temp <- copy(puma_mapping)
+  temp <- temp[, race_grp:=i]
+  puma_mapping_out<-rbind(puma_mapping_out, temp, fill = T)
+}
+
+puma_mapping_out <- puma_mapping_out[STATEFP=="06"]
+puma_mapping_out <- puma_mapping_out[, STATEFIP:=as.numeric(STATEFP)]
+
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+
+cases <- cases[month%in%c("April", "May", "June", "July", "August", "September")]
+
+cases <- cases[, tpr_topcoded:=ifelse(tpr>.15, .15, tpr)]
+cases <- cases[, crowd_essential_point_perc_topcoded:=ifelse(crowd_essential_point_perc>.3, .3, crowd_essential_point_perc)]
+cases <- cases[, test_rate_topcoded:=ifelse(test_rate>15000, 15000, test_rate)]
+cases <- cases[, case_rate_topcoded:=ifelse(case_rate>1500, 1500, case_rate)]
+
+# cases <- cases[, topcode_indic:=ifelse(crowd_essential_point_perc>.3 |
+#                                          tpr>.15 |
+#                                          test_rate > 15000,
+#                                        "Topcoded", "Not Topcoded")]
+# 
+cases <- cases[, month:=factor(month, levels = c("March", "April", "May", "June", "July", "August", "September"))]
+cases <- merge(cases, puma_mapping_out[,.(id, county, PUMA, race_grp)], by = c("PUMA", "race_grp"))
+df <- copy(cases)
+
+regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+df <- merge(df, regions, by = "county")
+
+df <- df[race_grp=="ALL" & month!="March"] 
+df <- df[, region_map:=factor(region_map, levels = c("North", "Bay", "Central", "Upper Southern", "Lower Southern"))]
+
+df <- df[, topcode_indic:=ifelse(test_rate > 15000 | 
+                                   tpr > .15 |
+                                   crowd_essential_point_perc > .3, 1 , 0)]
+```
+\newpage
+
+Figure S14. Household exposure risk vs. test rate (per 100,000 population), by PUMA, shown for April through September and grouped by region.
+
+```{r scatters_all2, fig.width=8, fig.height=10, message=F, warning=F}
+
+df <- df[, topcode_indic:=ifelse(test_rate > 15000 |
+                                   crowd_essential_point_perc > .3, 1 , 0)]
+
+  plot <- ggplot(data = df[month%in%c("April", "May", "June", "July", "August", "September") &
+                      !is.na(tpr_topcoded)], aes(x = crowd_essential_point_perc_topcoded, y = test_rate_topcoded)) +
+  geom_point(data = df[month%in%c("April", "May", "June", "July", "August", "September") & !is.na(tpr_topcoded)],
+             aes(shape = as.factor(topcode_indic)), alpha = .7, size = 2.5) +
+  theme_bw() + 
+  labs(x = "Household Exposure Risk", y = "Test Rate (Per 100,000)", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20), strip.text = element_text(size = 12)) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(breaks = c(0, 5000, 10000, 15000)) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_grid(region_map~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+  print(plot)
+```
+
+\newpage
+
+Figure S15. Household exposure risk vs. case rate (per 100,000 population), by PUMA, shown for April through September and grouped by region.
+
+```{r scatters_all3, fig.width=8, fig.height=10, message=F, warning=F}
+  df <- df[, topcode_indic:=ifelse(case_rate > 1500 |
+                                   crowd_essential_point_perc > .3, 1 , 0)]
+
+
+  plot <- ggplot(data = df[month%in%c("April", "May", "June", "July", "August", "September") &
+                      !is.na(tpr_topcoded)], aes(x = crowd_essential_point_perc_topcoded, y = case_rate_topcoded)) +
+  geom_point(data = df[month%in%c("April", "May", "June", "July", "August", "September") & !is.na(tpr_topcoded)],
+             aes(shape = as.factor(topcode_indic)), alpha = .7, size = 2.5) +
+  theme_bw() + 
+  labs(x = "Household Exposure Risk", y = "Case Rate (Per 100,000)", shape = "Topcoding") +
+  scale_shape_manual(values = c(16, 18)) +
+  theme(text = element_text(size = 20), strip.text = element_text(size = 12)) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(breaks = c(0, 500, 1000, 1500)) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1), legend.key.width = unit(2, "cm")) +
+  guides(shape = guide_legend(override.aes = list(size=6))) +
+  facet_grid(region_map~month) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+  print(plot)
+  
+```
+
+
+```{r state_insets, echo = F, fig.width=7, fig.height=10, message=F, warning=F}
+out_race <- fread("~/COVID/acs_household_analysis/CA_analysis/PUMA_estimates/puma_estimates_race_withse_insurance_multiocc.csv")
+cases <- fread("~/COVID/acs_household_analysis/CA_analysis/paper/cleaned_data/redistributed_final.csv")
+
+cases <- merge(cases, out_race[,.(PUMA, crowd_essential_point_perc, race_grp)], by = c("PUMA", "race_grp"))
+
+cases <- cases[month=="March-September"]
+cases <- merge(cases, puma_mapping_out[,.(id, county, PUMA, race_grp)], by = c("PUMA", "race_grp"))
+
+cases <- cases[race_grp == "Hispanic/Latinx", race_grp:="Latino"]
+cases <- cases[race_grp == "Non-Hispanic Black", race_grp:="Black"]
+cases <- cases[race_grp == "Non-Hispanic White", race_grp:="White"]
+
+indic_df <- copy(cases)
+indic_df <- indic_df[race_grp!="ALL" & race_grp!="Unknown", pct_race:=tot_persons_point/sum(tot_persons_point), by = c("PUMA")]
+indic_df <- indic_df[, max_pct_race:=max(pct_race, na.rm=T), by = c("PUMA")]
+small_df <- indic_df[max_pct_race==pct_race]
+small_df <- unique(small_df[,.(race_grp, PUMA)])
+setnames(small_df, "race_grp", "max_pct_race_grp")
+indic_df <- merge(indic_df, small_df, by = "PUMA")
+indic_df <- indic_df[, id:=paste0("6_", PUMA)]
+indic_df <- indic_df[race_grp=="ALL"]
+
+regions <- fread("~/COVID/acs_household_analysis/CA_analysis/county_to_region_appendix.csv")
+
+map_df <- fread("~/COVID/acs_household_analysis/CA_analysis/CA_Vulnerability/puma_map_race.csv")
+map_df <- unique(map_df[,.(id, long, lat, order, hole, piece, group)])
+
+map_df <- merge(map_df, indic_df, by = "id", allow.cartesian = T)
+map_df <- map_df[, drop:=ifelse(id=="6_3768" & lat<33.5, 1, 0)]
+map_df <- map_df[drop == 0]
+map_df <- map_df[, drop:=ifelse(id=="6_7501" & long < -122.8, 1, 0)]
+map_df <- map_df[drop == 0]
+map_df <- map_df[, drop:=ifelse(id=="6_11106" & lat<33.5, 1, 0)]
+map_df <- map_df[drop == 0]
+
+county_outlines <- readRDS("~/COVID/acs_household_analysis/county_map.RDS")
+county_outlines <- county_outlines[county_outlines$STATEFP=="06",]
+county_outlines_dt <- suppressWarnings(fortify(county_outlines, region = "COUNTYFP"))
+county_outlines_dt <- merge(county_outlines_dt, unique(puma_mapping_out[,.(county, COUNTYFP)]), by.y="COUNTYFP", by.x="id", all.x=T)
+county_outlines_dt <- merge(county_outlines_dt, regions, by = "county")
+county_outlines_dt <- as.data.table(county_outlines_dt)
+
+county_outlines_dt <- county_outlines_dt[, drop:=ifelse(county=="Los Angeles County" & lat<33.5, 1, 0)]
+county_outlines_dt <- county_outlines_dt[drop == 0]
+county_outlines_dt <- county_outlines_dt[, drop:=ifelse(id=="6_7501" & long < -122.8, 1, 0)]
+county_outlines_dt <- county_outlines_dt[drop == 0]
+county_outlines_dt <- county_outlines_dt[, drop:=ifelse(id=="6_11106" & lat<33.5, 1, 0)]
+county_outlines_dt <- county_outlines_dt[drop == 0]
+
+
+indic_df <- merge(indic_df, regions, by = c("county"))
+
+backup <- copy(map_df)
+
+for (i in c("North", "Bay", "Central", "Upper Southern", "Lower Southern")) {
+
+map_df <- copy(backup)
+
+out_plots <- NULL
+counter <- 1
+
+pumas_keep <- unique(indic_df$id[indic_df$region_map==i])
+
+map_df <- map_df[id%in%pumas_keep]
+
+out_plots[[counter]] <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = max_pct_race_grp, alpha = max_pct_race)) +
+  geom_polygon(data = county_outlines_dt[region_map==i], aes(x = long, y = lat, group = group), color = "gray", fill = NA) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom") +
+  scale_fill_manual(values = c("Latino" = "#985BE3", "White" = "#D8B12A", "Other" = "#53B1B6", "Black" = "#F16935")) +
+  scale_alpha_continuous(limits = c(min(map_df$max_pct_race), max(map_df$max_pct_race)), labels = scales::percent, breaks = breaks_pretty(n = 3)) + 
+  labs(title = " ", fill = "", alpha = "") +
+  guides(fill=guide_legend(nrow=4,byrow=TRUE)) +
+  guides(alpha=guide_legend(nrow=4,byrow=TRUE)) +
+  theme(legend.key.size = unit(.5, "cm")) +
+  labs(title = "Plurality Race/Ethnicity\n ")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+counter <- counter+1
+
+out_plots[[counter]]  <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = crowd_essential_point_perc)) +
+      geom_polygon(data = county_outlines_dt[region_map==i], aes(x = long, y = lat, group = group), color = "gray", fill = NA) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  scale_fill_distiller(limits = c(min(map_df$crowd_essential_point_perc), max(map_df$crowd_essential_point_perc)),
+                       palette = "Greens", direction = 1, labels = scales::percent, breaks = breaks_pretty(n = 3)) +
+  labs(fill = "") +
+  theme(legend.position = "bottom", legend.key.width = unit(1.2, "cm"), plot.margin = margin(t = 0.2, b = 1.9, unit = "cm")) +
+  labs(title = "% living in crowded households\nwith an essential worker")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+counter <- counter+1
+
+out_plots[[counter]]  <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = test_rate)) +
+    geom_polygon(data = county_outlines_dt[region_map==i], aes(x = long, y = lat, group = group), color = "gray", fill = NA) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  scale_fill_distiller(limits = c(min(map_df$test_rate), max(map_df$test_rate)), palette = "Blues", direction = 1, breaks = breaks_pretty(n = 3)) +
+  labs(fill = "") +
+  theme(legend.position = "bottom", legend.key.width = unit(1.2, "cm"), plot.margin = margin(t = .2, b = 1.9, unit = "cm")) +
+  labs(title = "Test Rate\nPer 100,000 Population")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+counter <- counter+1
+
+out_plots[[counter]]  <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = case_rate)) +
+    geom_polygon(data = county_outlines_dt[region_map==i], aes(x = long, y = lat, group = group), color = "gray", fill = NA) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  scale_fill_distiller(limits = c(min(map_df$case_rate), max(map_df$case_rate)), palette = "Reds", direction = 1, breaks = breaks_pretty(n = 3)) +
+  labs(fill = "") +
+  theme(legend.position = "bottom", legend.key.width = unit(1.2, "cm"), plot.margin = margin(t = .2, b = 1.9, unit = "cm")) +
+  labs(title = "Case Rate\nPer 100,000 Population")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+grid.arrange(out_plots[[1]], out_plots[[2]], out_plots[[3]], out_plots[[4]],
+             ncol = 2,
+             layout_matrix = rbind(c(1, 2),
+                                   c(3, 4)),
+             top = textGrob(paste0(i),gp=gpar(fontsize=20,font=2)))
+
+}
+
+for (i in c("Alameda County", "Contra Costa County", "San Francisco County", "Sacramento County", "San Mateo County",
+            "Santa Clara County", "Orange County", "Riverside County", "Fresno County", "San Bernardino County", 
+            "San Diego County", "Kern County", "Los Angeles County", "Ventura County")) {
+
+map_df <- copy(backup)
+
+out_plots <- NULL
+counter <- 1
+
+if (i %in% c("Fresno County", "Sacramento County")) {
+  pumas_keep <- unique(indic_df$id[indic_df$county==i])
+
+} else {
+  pumas_keep <- unique(indic_df$id[indic_df$region_map==i])
+}
+map_df <- map_df[id%in%pumas_keep]
+
+out_plots[[counter]] <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = max_pct_race_grp, alpha = max_pct_race)) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = "bottom") +
+  scale_fill_manual(values = c("Latino" = "#985BE3", "White" = "#D8B12A", "Other" = "#53B1B6", "Black" = "#F16935")) +
+  scale_alpha_continuous(limits = c(min(map_df$max_pct_race), max(map_df$max_pct_race)), labels = scales::percent, breaks = breaks_pretty(n = 3)) + 
+  labs(title = " ", fill = "", alpha = "") +
+  guides(fill=guide_legend(nrow=4,byrow=TRUE)) +
+  guides(alpha=guide_legend(nrow=4,byrow=TRUE)) +
+  theme(legend.key.size = unit(.5, "cm")) +
+  labs(title = "Plurality Race/Ethnicity\n ")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+counter <- counter+1
+
+out_plots[[counter]]  <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = crowd_essential_point_perc)) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  scale_fill_distiller(limits = c(min(map_df$crowd_essential_point_perc), max(map_df$crowd_essential_point_perc)),
+                       palette = "Greens", direction = 1, labels = scales::percent, breaks = breaks_pretty(n = 3)) +
+  labs(fill = "") +
+  theme(legend.position = "bottom", legend.key.width = unit(1.2, "cm"), plot.margin = margin(t = 0.2, b = 1.9, unit = "cm")) +
+  labs(title = "% living in crowded households\nwith an essential worker")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+counter <- counter+1
+
+out_plots[[counter]]  <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = test_rate)) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  scale_fill_distiller(limits = c(min(map_df$test_rate), max(map_df$test_rate)), palette = "Blues", direction = 1, breaks = breaks_pretty(n = 3)) +
+  labs(fill = "") +
+  theme(legend.position = "bottom", legend.key.width = unit(1.2, "cm"), plot.margin = margin(t = .2, b = 1.9, unit = "cm")) +
+  labs(title = "Test Rate\nPer 100,000 Population")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+counter <- counter+1
+
+out_plots[[counter]]  <- ggplot(data = map_df[id%in%pumas_keep]) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = case_rate)) +
+  theme_void() +
+  theme(text = element_text(size = 14), legend.text = element_text(size = 12)) +
+  coord_equal() +
+  scale_fill_distiller(limits = c(min(map_df$case_rate), max(map_df$case_rate)), palette = "Reds", direction = 1, breaks = breaks_pretty(n = 3)) +
+  labs(fill = "") +
+  theme(legend.position = "bottom", legend.key.width = unit(1.2, "cm"), plot.margin = margin(t = .2, b = 1.9, unit = "cm")) +
+  labs(title = "Case Rate\nPer 100,000 Population")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+grid.arrange(out_plots[[1]], out_plots[[2]], out_plots[[3]], out_plots[[4]],
+             ncol = 2,
+             layout_matrix = rbind(c(1, 2),
+                                   c(3, 4)),
+             top = textGrob(paste0(i),gp=gpar(fontsize=20,font=2)))
+
+}
+
+
+```
+
