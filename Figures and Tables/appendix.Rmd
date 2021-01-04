@@ -1,5 +1,5 @@
 ---
-title: "Racial/Ethnic Disparities in Covid-19 Transmission Risk Exposure, Testing, and Cases at the Sub-County Level in California"
+title: "Racial/Ethnic Disparities in COVID-19 Exposure Risk, Testing, and Cases"
 subtitle: "Supplemental Appendix"
 output: 
   pdf_document:
@@ -85,7 +85,7 @@ The most recent 5-year microdata available from the American Community Survey co
 Figure S1. Percent of tests with PUMA-level residential geolocation available, out of all tests in a county.
 
 ```{r heatmap_tests, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-load("./test_heat_map_appendix2020-11-30 (1).RData")
+load("./test_heat_map_appendix2020-11-30.RData")
 print(test_heat_map)
 ```
 
@@ -94,7 +94,7 @@ print(test_heat_map)
 Figure S2. Percent of cases with PUMA-level residential geolocation available, out of all cases in a county.
 
 ```{r heatmap_cases, echo = F, fig.width=8, fig.height=10, message=F, warning=F}
-load("./case_heat_map_appendix2020-11-30 (1).RData")
+load("./case_heat_map_appendix2020-11-30.RData")
 print(case_heat_map)
 ```
 
